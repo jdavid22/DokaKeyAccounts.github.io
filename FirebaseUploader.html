@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Firebase Web Basics</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,700" rel="stylesheet">
+
+	<script src="https://use.fontawesome.com/939e9dd52c.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+     <style>
+      .qr-code {
+  max-width: 250px;
+  margin: 10px;
+}
+    </style>
+
+</head>
+	
+
+    
+  
+  
+  <div class="mainDiv" align="left">
+		<progress id="uploader" value="0" max="100" style="height: 18px;">0%</progress>
+		<input type="file" id="fileButton" value="upload" style="font-size: 18px"/>
+	</div>
+      <div class="container-fluid">
+    <div class="text-center">
+    <img src="" class="qr-code img-thumbnail img-responsive">
+     
+    </div>
+
+
+
+<script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+  // Initialize Firebase
+  var config = {
+     apiKey: "AIzaSyCG2S0KzQCrN3-xj0KbupezQenGWPPUkBg",
+    authDomain: "dokaar-65115.firebaseapp.com",
+    databaseURL: "https://dokaar-65115.firebaseio.com",
+    projectId: "dokaar-65115",
+    storageBucket: "dokaar-65115.appspot.com",
+    messagingSenderId: "1029538435441"
+  };
+  firebase.initializeApp(config);
+  //-------------------------------------
+  
+  var uploader = document.getElementById('uploader');
+  var fileButton = document.getElementById('fileButton');
+  fileButton.addEventListener('change', function(e){
+  
+  var file = e.target.files[0];
+  
+  const metadata = {
+      contentType: file.type
+
+  };
+
+  var storageRef = firebase.storage().ref('DokaCAD Data/'+file.name);
+  
+  var task = storageRef.put(file, metadata);
+  
+  task.on('state_changed', function progress(snapshot) {
+  
+    var percentage = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+    uploader.value = percentage;
+  
+  }, function error(err) {
+
+
+  },function complete() {
+      
+      //   content.value = file.name;
+
+      //  content.value = "https://chart.googleapis.com/chart?cht=qr&chl=" + htmlEncode(file.name) + "&chs=250x250&chld=L|0";
+      function htmlEncode (value){
+        return $('<div/>').text(value).html();
+  //return $('<div/>').text(value).html();
+}
+    $(".qr-code").attr("src", "https://chart.googleapis.com/chart?cht=qr&chl=" + $('<div/>').text(file.name).html() + "&chs=250x250&chld=L|0");
+
+      
+
+  });
+  
+
+});  
+
+</script>
+
+
+<script src="fileup.js">
+</script>
+
+
+</body>
+</html>
